@@ -7,7 +7,7 @@ Bash script to generate and install Let's Encrypt certificate for your websites 
 - Run `sudo chmod +x /usr/local/bin/sple.sh`
 
 ## How to use
-- Run `sple.sh` anywhere from your console as a root
+- Run `sple.sh` anywhere from your console as root
 - Follow the on-screen instructions
 
 ## Notes

@@ -2,9 +2,9 @@
 Bash script to generate and install Let's Encrypt certificate for your websites on your free ServerPilot account. Currently, the only easy way to add SSL to your ServerPilot-powered websites is by subscribing to the paid plan. 
 
 ## How to install
-- Install Let's Encrypt, please follow [the official instructions here](https://letsencrypt.readthedocs.org/en/latest/using.html#installation)
+- ssh to your server, `sudo su` to act as root
 - Copy `sple.sh` to your `/usr/local/bin` folder
-- Run `sudo chmod +x /usr/local/bin/sple.sh`
+- Run `sudo chmod +x /usr/local/bin/sple.sh` to make it executable
 
 ## How to use
 - Run `sple.sh` anywhere from your console as root

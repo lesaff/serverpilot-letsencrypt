@@ -1,7 +1,7 @@
 #!/bin/bash
 # Bash script to create/add Let's Encrypt SSL to ServerPilot app
 # by Rudy Affandi (2016)
-# Edited Feb 9, 2016
+# Edited Feb 16, 2016
 
 # Todo
 # 1. Generate certificate
@@ -12,8 +12,31 @@
 # 4. Confirm that it's done and show how to do auto-renew via CRON
 
 # Settings
+lefolder=/root/letsencrypt
 appfolder=/srv/users/serverpilot/apps
 conffolder=/etc/nginx-sp/vhosts.d
+
+# Make sure this script is run as root
+if [ "$EUID" -ne 0 ]
+then 
+    echo ""
+	echo "Please run this script as root."
+	exit
+fi
+
+# Check for Let's Encrypt installation
+if [ ! -d "$lefolder" ]
+then
+    echo "Let's Encrypt is not installed/found in your root folder. Would you like to install it?"
+    read -p "Y or N " -n 1 -r
+    echo ""
+    if [[ "$REPLY" =~ ^[Yy]$ ]]
+    then
+    	cd /root && sudo git clone https://github.com/letsencrypt/letsencrypt
+    else
+    	exit
+    fi
+fi
 
 echo ""
 echo ""
@@ -52,7 +75,7 @@ echo ""
 echo ""
 echo "Generating SSL certificate for $appname"
 echo ""
-/root/letsencrypt/letsencrypt-auto certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
+$lefolder/letsencrypt-auto certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
 
 # Generate nginx configuration file
 configfile=$conffolder/$appname.ssl.conf
@@ -120,7 +143,7 @@ echo ""
 echo "Let's Encrypt SSL certificate expires every 3 months. To set it to auto-renew, please"
 echo "add the following to your root's CRON job:"
 echo ""
-echo "@monthly /root/letsencrypt/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}"
+echo "@monthly $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}"
 echo ""
 echo "Your Let's Encrypt SSL certificate has been installed. Please update your .htaccess to force HTTPS on your app"
 echo ""

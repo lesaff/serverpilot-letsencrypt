@@ -13,5 +13,5 @@ Bash script to generate and install Let's Encrypt certificate for your websites 
 ## Notes
 - This script assumes that you did not change your default ServerPilot installation folder
 - When entering your domain names, please list the primary root domain name first
-- Copy and paste the `cronjob` code generated at the end of the process to schedule a monthly certificate renewal
+- This script adds cron job to schedule automatic renewal every two months at 1am
 - To force HTTPS on your website, please follow [instructions here](https://serverpilot.io/community/articles/how-to-force-SSL-by-redirecting-http-to-https.html)

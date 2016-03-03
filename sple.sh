@@ -140,10 +140,25 @@ echo "We're almost done here. Restarting nginx..."
 sudo service nginx-sp restart
 echo ""
 echo ""
-echo "Let's Encrypt SSL certificate expires every 3 months. To set it to auto-renew, please"
-echo "add the following to your root's CRON job:"
+echo "Adding cron job to renew your LE SSL certificate every 2 months"
 echo ""
-echo "@monthly $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}"
+
+# Write crontab to temp file
+crontab -l > spcron
+
+# Append new schedule to crontab
+echo "* 1 * */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}" >> spcron
+echo ""
+
+# Save crontab
+crontab spcron
+
+# Delete temp file
+rm spcron
+
+echo ""
+echo "The following has been added to your crontab for automatic renewal every two months"
+echo "* 1 * */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}"
 echo ""
 echo "Your Let's Encrypt SSL certificate has been installed. Please update your .htaccess to force HTTPS on your app"
 echo ""

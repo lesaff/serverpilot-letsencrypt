@@ -147,7 +147,7 @@ echo ""
 crontab -l > spcron
 
 # Append new schedule to crontab
-echo "* 1 * */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}" >> spcron
+echo "0 1 1 */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}" >> spcron
 echo ""
 
 # Save crontab
@@ -158,7 +158,7 @@ rm spcron
 
 echo ""
 echo "The following has been added to your crontab for automatic renewal every two months"
-echo "* 1 * */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}"
+echo "0 1 1 */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}"
 echo ""
 echo "Your Let's Encrypt SSL certificate has been installed. Please update your .htaccess to force HTTPS on your app"
 echo ""

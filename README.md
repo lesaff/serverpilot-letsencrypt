@@ -13,6 +13,16 @@ Bash script to generate and install Let's Encrypt certificate for your websites 
 ## Why `root`?
 This script updates/create script in the `/etc/nginx-sp` that requires root access
 
+## IF things go wrong
+ssh to your sp server as `root`  
+`cd /etc/nginx-sp/vhosts.d`  
+List all the `ssl` config files  
+`ls *ssl*`  
+Delete the `<appname>.ssl.conf` that is causing problem
+
+Restart nginx
+`sudo service nginx-sp restart`
+
 ## Notes
 - This script assumes that you did not change your default ServerPilot installation folder
 - When entering your domain names, please list the primary root domain name first

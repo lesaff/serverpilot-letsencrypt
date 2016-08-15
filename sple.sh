@@ -49,10 +49,15 @@ fi
 # 16.04 Xenial Xerus
 if [ $ubuntu == '16.04' ]
 then
-    sudo apt-get update
-    sudo apt-get install letsencrypt -y
-fi
 
+    le=$(dpkg-query -W -f='${Status}' letsencrypt 2>/dev/null | grep -c "ok installed")
+    
+    if [ $le == 0 ]
+    then 
+        sudo apt-get update
+        sudo apt-get install letsencrypt -y
+    fi
+fi
 
 echo ""
 echo ""

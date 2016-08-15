@@ -29,10 +29,14 @@ Restart nginx
 Add the following to your crontab (`crontab -e`)
 
 **For Ubuntu 14.04**  
+```
 0 */12 * * * /usr/local/bin/certbot-auto renew --quiet --no-self-upgrade
+```
 
 **For Ubuntu 16.04**  
+```
 0 */12 * * * letsencrypt renew
+```
 
 ## Notes
 - This script assumes that you did not change your default ServerPilot installation folder

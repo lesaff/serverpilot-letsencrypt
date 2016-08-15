@@ -38,4 +38,5 @@ Add the following to your crontab (`crontab -e`)
 - This script assumes that you did not change your default ServerPilot installation folder
 - When entering your domain names, please list the primary root domain name first
 - To force HTTPS on your website, please follow [instructions here](https://serverpilot.io/community/articles/how-to-force-SSL-by-redirecting-http-to-https.html)
+- Obey/observe the rate limits. [Read the full documentation](https://letsencrypt.org/docs/rate-limits/) on the Let's Encrypt website for more information.
 

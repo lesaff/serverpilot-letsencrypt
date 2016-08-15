@@ -1,18 +1,19 @@
 #!/bin/bash
 # Bash script to create/add Let's Encrypt SSL to ServerPilot app
 # by Rudy Affandi (2016)
-# Edited Feb 16, 2016
+# Edited Aug 14, 2016
 
 # Todo
 # 1. Generate certificate
-# /root/letsencrypt/letsencrypt-auto certonly --webroot -w /srv/users/serverpilot/apps/appname/public -d appdomain.tld
+# /usr/local/bin/certbot-auto certonly --webroot -w /srv/users/serverpilot/apps/appname/public -d appdomain.tld
 # 2. Generate appname.ssl.conf file
 # 3. Restart nginx
 # sudo service nginx-sp restart
 # 4. Confirm that it's done and show how to do auto-renew via CRON
 
 # Settings
-lefolder=/root/letsencrypt
+ubuntu=$(lsb_release -r -s)
+certbotfolder=/usr/local/bin/certbot-auto
 appfolder=/srv/users/serverpilot/apps
 conffolder=/etc/nginx-sp/vhosts.d
 
@@ -24,19 +25,34 @@ then
 	exit
 fi
 
-# Check for Let's Encrypt installation
-if [ ! -d "$lefolder" ]
+# Check for Ubuntu version
+# 14.04 Trusty Tahr
+if [ $ubuntu == '14.04' ]
 then
-    echo "Let's Encrypt is not installed/found in your root folder. Would you like to install it?"
-    read -p "Y or N " -n 1 -r
-    echo ""
-    if [[ "$REPLY" =~ ^[Yy]$ ]]
+
+    # Check for Let's Encrypt installation
+    if [ ! -f "$certbotfolder" ]
     then
-    	cd /root && sudo git clone https://github.com/letsencrypt/letsencrypt
-    else
-    	exit
+        echo "Let's Encrypt is not installed/found in your root folder. Would you like to install it?"
+        read -p "Y or N " -n 1 -r
+        echo ""
+        if [[ "$REPLY" =~ ^[Yy]$ ]]
+        then
+            cd /root && sudo wget https://dl.eff.org/certbot-auto
+            chmod a+x certbot-auto
+        else
+            exit
+        fi
     fi
 fi
+
+# 16.04 Xenial Xerus
+if [ $ubuntu == '16.04' ]
+then
+    sudo apt-get update
+    sudo apt-get install letsencrypt -y
+fi
+
 
 echo ""
 echo ""
@@ -75,7 +91,19 @@ echo ""
 echo ""
 echo "Generating SSL certificate for $appname"
 echo ""
-$lefolder/letsencrypt-auto certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
+
+# Check for Ubuntu version
+# 14.04 Trusty Tahr
+if [ $ubuntu == '14.04' ]
+then
+    /usr/local/bin/certbot-auto certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
+fi
+
+# 16.04 Xenial Xerus
+if [ $ubuntu == '16.04' ]
+then
+    letsencrypt certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
+fi
 
 # Generate nginx configuration file
 configfile=$conffolder/$appname.ssl.conf
@@ -140,26 +168,25 @@ echo "We're almost done here. Restarting nginx..."
 sudo service nginx-sp restart
 echo ""
 echo ""
-echo "Adding cron job to renew your LE SSL certificate every 2 months"
 echo ""
-
-# Write crontab to temp file
-crontab -l > spcron
-
-# Append new schedule to crontab
-echo "0 1 1 */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}" >> spcron
-echo ""
-
-# Save crontab
-crontab spcron
-
-# Delete temp file
-rm spcron
-
-echo ""
-echo "The following has been added to your crontab for automatic renewal every two months"
-echo "0 1 1 */2 * $lefolder/letsencrypt-auto certonly --renew-by-default --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}"
 echo ""
 echo "Your Let's Encrypt SSL certificate has been installed. Please update your .htaccess to force HTTPS on your app"
+echo ""
+echo "To enable auto-renewal, add the following to your crontab:"
+
+# Append new schedule to crontab
+# 14.04 Trusty Tahr
+if [ $ubuntu == '14.04' ]
+then
+    echo "0 */12 * * * /usr/local/bin/certbot-auto renew --quiet --no-self-upgrade"
+fi
+
+# 16.04 Xenial Xerus
+if [ $ubuntu == '16.04' ]
+then
+    echo "0 */12 * * * letsencrypt renew"
+fi
+
+echo ""
 echo ""
 echo "Cheers!"

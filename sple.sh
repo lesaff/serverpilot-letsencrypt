@@ -16,6 +16,8 @@ ubuntu=$(lsb_release -r -s)
 certbotfolder=/usr/local/bin/certbot-auto
 appfolder=/srv/users/serverpilot/apps
 conffolder=/etc/nginx-sp/vhosts.d
+acmeconfigfolder=/etc/nginx-sp/letsencrypt.d
+acmeconfigfile="$acmeconfigfolder/letsencrypt-acme-challenge.conf"
 
 # Make sure this script is run as root
 if [ "$EUID" -ne 0 ]
@@ -40,6 +42,7 @@ then
         then
             cd /root && sudo wget https://dl.eff.org/certbot-auto
             chmod a+x certbot-auto
+            mv certbot-auto /usr/local/bin/
         else
             exit
         fi
@@ -110,6 +113,25 @@ then
     letsencrypt certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
 fi
 
+# Check the ACME configuration file for Nginx
+if [ ! -f "$acmeconfigfile" ] 
+then
+    echo ""
+    echo ""
+    echo "Creating configuration file $acmeconfigfile for ACME"
+    
+    mkdir $acmeconfigfolder
+    touch $acmeconfigfile
+    
+    echo "location ~ /\.well-known\/acme-challenge {" | sudo tee $acmeconfigfile
+    echo "    allow all;" | sudo tee -a $acmeconfigfile
+    echo "}" | sudo tee -a $acmeconfigfile
+    echo "" | sudo tee -a $acmeconfigfile
+    echo "location = /.well-known/acme-challenge/ {" | sudo tee -a $acmeconfigfile
+    echo "    return 404;" | sudo tee -a $acmeconfigfile
+    echo "}" | sudo tee -a $acmeconfigfile
+fi
+
 # Generate nginx configuration file
 configfile=$conffolder/$appname.ssl.conf
 echo ""
@@ -164,6 +186,7 @@ echo "" | sudo tee -a $configfile
 echo "    #includes" | sudo tee -a $configfile 
 echo "    include /etc/nginx-sp/vhosts.d/$appname.d/*.nonssl_conf;" | sudo tee -a $configfile 
 echo "    include /etc/nginx-sp/vhosts.d/$appname.d/*.conf;" | sudo tee -a $configfile 
+echo "    include $acmeconfigfolder/*.conf;" | sudo tee -a $configfile 
 echo "}" | sudo tee -a $configfile 
 
 # Wrapping it up

@@ -184,7 +184,6 @@ echo "    proxy_set_header X-Forwarded-SSL on;" | sudo tee -a $configfile
 echo "    proxy_set_header X-Forwarded-Proto \$scheme;" | sudo tee -a $configfile 
 echo "" | sudo tee -a $configfile 
 echo "    #includes" | sudo tee -a $configfile 
-echo "    include /etc/nginx-sp/vhosts.d/$appname.d/*.nonssl_conf;" | sudo tee -a $configfile 
 echo "    include /etc/nginx-sp/vhosts.d/$appname.d/*.conf;" | sudo tee -a $configfile 
 echo "    include $acmeconfigfolder/*.conf;" | sudo tee -a $configfile 
 echo "}" | sudo tee -a $configfile 

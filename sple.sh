@@ -56,9 +56,15 @@ then
     le=$(dpkg-query -W -f='${Status}' letsencrypt 2>/dev/null | grep -c "ok installed")
     
     if [ $le == 0 ]
-    then 
-        sudo apt-get update
-        sudo apt-get install letsencrypt -y
+    then
+        echo "Let's Encrypt is not installed/found. Would you like to continue to install it?"
+        read -p "Y or N" -n 1 -r
+        echo ""
+        if [[ "$REPLY" =~ ^[Yy]$ ]]
+        then
+            sudo apt-get update
+            sudo apt-get install letsencrypt -y
+        fi 
     fi
 fi
 
@@ -191,7 +197,8 @@ echo "}" | sudo tee -a $configfile
 # Wrapping it up
 echo ""
 echo ""
-echo "We're almost done here. Restarting nginx..."
+echo "We're almost done here. Opening HTTPS Port and  Restarting nginx..."
+sudo ufw allow https
 sudo service nginx-sp restart
 echo ""
 echo ""

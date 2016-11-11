@@ -191,7 +191,8 @@ echo "}" | sudo tee -a $configfile
 # Wrapping it up
 echo ""
 echo ""
-echo "We're almost done here. Restarting nginx..."
+echo "We're almost done here. Opening HTTPS Port and  Restarting nginx..."
+sudo ufw allow https
 sudo service nginx-sp restart
 echo ""
 echo ""

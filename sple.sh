@@ -5,7 +5,7 @@
 
 # Todo
 # 1. Generate certificate
-# /usr/local/bin/certbot-auto certonly --webroot -w /srv/users/serverpilot/apps/appname/public -d appdomain.tld
+# /usr/local/bin/certbot-auto certonly --webroot -w /srv/users/$username/apps/appname/public -d appdomain.tld
 # 2. Generate appname.ssl.conf file
 # 3. Restart nginx
 # sudo service nginx-sp restart
@@ -14,7 +14,7 @@
 # Settings
 ubuntu=$(lsb_release -r -s)
 certbotfolder=/usr/local/bin/certbot-auto
-appfolder=/srv/users/serverpilot/apps
+appfolder=/srv/users/$username/apps
 conffolder=/etc/nginx-sp/vhosts.d
 acmeconfigfolder=/etc/nginx-sp/letsencrypt.d
 acmeconfigfile="$acmeconfigfolder/letsencrypt-acme-challenge.conf"
@@ -84,6 +84,9 @@ echo ""
 echo "Please enter your app name:"
 read appname
 echo ""
+echo "Please enter the System User name for the app:"
+read username
+echo ""
 echo "Please enter all the domain names and sub-domain names"
 echo "you would like to use, separated by space"
 read domains
@@ -110,13 +113,13 @@ echo ""
 # 14.04 Trusty Tahr
 if [ $ubuntu == '14.04' ]
 then
-    /usr/local/bin/certbot-auto certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
+    /usr/local/bin/certbot-auto certonly --webroot -w /srv/users/$username/apps/$appname/public ${APPDOMAINLIST[@]}
 fi
 
 # 16.04 Xenial Xerus
 if [ $ubuntu == '16.04' ]
 then
-    letsencrypt certonly --webroot -w /srv/users/serverpilot/apps/$appname/public ${APPDOMAINLIST[@]}
+    letsencrypt certonly --webroot -w /srv/users/$username/apps/$appname/public ${APPDOMAINLIST[@]}
 fi
 
 # Check the ACME configuration file for Nginx
@@ -177,10 +180,10 @@ echo "" | sudo tee -a $configfile
 echo "    # verify chain of trust of OCSP response" | sudo tee -a $configfile 
 echo "    ssl_trusted_certificate /etc/letsencrypt/live/${APPDOMAINS[0]}/chain.pem;" | sudo tee -a $configfile 
 echo "    #root directory and logfiles" | sudo tee -a $configfile 
-echo "    root /srv/users/serverpilot/apps/$appname/public;" | sudo tee -a $configfile 
+echo "    root /srv/users/$username/apps/$appname/public;" | sudo tee -a $configfile 
 echo "" | sudo tee -a $configfile 
-echo "    access_log /srv/users/serverpilot/log/$appname/${appname}_nginx.access.log main;" | sudo tee -a $configfile 
-echo "    error_log /srv/users/serverpilot/log/$appname/${appname}_nginx.error.log;" | sudo tee -a $configfile 
+echo "    access_log /srv/users/$username/log/$appname/${appname}_nginx.access.log main;" | sudo tee -a $configfile 
+echo "    error_log /srv/users/$username/log/$appname/${appname}_nginx.error.log;" | sudo tee -a $configfile 
 echo "" | sudo tee -a $configfile 
 echo "    #proxyset" | sudo tee -a $configfile 
 echo "    proxy_set_header Host \$host;" | sudo tee -a $configfile 

@@ -30,12 +30,12 @@ Add the following to your crontab (`crontab -e`)
 
 **For Ubuntu 14.04**  
 ```
-0 */12 * * * /usr/local/bin/certbot-auto renew --quiet --no-self-upgrade --post-hook "service sp-nginx reload"
+0 */12 * * * /usr/local/bin/certbot-auto renew --quiet --no-self-upgrade --post-hook "service nginx-sp reload"
 ```
 
 **For Ubuntu 16.04**  
 ```
-0 */12 * * * letsencrypt renew --post-hook "service sp-nginx reload"
+0 */12 * * * letsencrypt renew --post-hook "service nginx-sp reload"
 ```
 
 ## Notes

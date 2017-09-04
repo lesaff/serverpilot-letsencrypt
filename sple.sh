@@ -221,7 +221,7 @@ fi
 # 16.04 Xenial Xerus
 if [ $ubuntu == '16.04' ]
 then
-    echo "0 */12 * * * letsencrypt renew"
+    echo "0 */12 * * * letsencrypt renew && service nginx-sp reload"
 fi
 
 echo ""

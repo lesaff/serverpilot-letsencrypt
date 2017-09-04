@@ -35,7 +35,7 @@ Add the following to your crontab (`crontab -e`)
 
 **For Ubuntu 16.04**  
 ```
-0 */12 * * * letsencrypt renew
+0 */12 * * * letsencrypt renew && service nginx-sp reload
 ```
 
 ## Notes

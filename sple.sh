@@ -215,7 +215,7 @@ echo "To enable auto-renewal, add the following to your crontab:"
 # 14.04 Trusty Tahr
 if [ $ubuntu == '14.04' ]
 then
-    echo "0 */12 * * * /usr/local/bin/certbot-auto renew --quiet --no-self-upgrade"
+    echo "0 */12 * * * /usr/local/bin/certbot-auto renew --quiet --no-self-upgrade --post-hook "service nginx-sp reload""
 fi
 
 # 16.04 Xenial Xerus

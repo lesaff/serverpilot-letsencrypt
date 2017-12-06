@@ -5,7 +5,9 @@ Bash script to generate and install Let's Encrypt certificate for your websites 
 ## How to install
 - ssh to your server, `sudo su` to act as root
 - Copy `sple.sh` to your `/usr/local/bin` folder
-  Run`cd /usr/local/bin && wget https://raw.githubusercontent.com/lesaff/serverpilot-letsencrypt/master/sple.sh`
+  ```
+  cd /usr/local/bin && wget https://raw.githubusercontent.com/lesaff/serverpilot-letsencrypt/master/sple.sh
+  ```
 - Run `sudo chmod +x sple.sh` to make it executable
 
 ## How to use

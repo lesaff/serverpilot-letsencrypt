@@ -5,7 +5,8 @@ Bash script to generate and install Let's Encrypt certificate for your websites 
 ## How to install
 - ssh to your server, `sudo su` to act as root
 - Copy `sple.sh` to your `/usr/local/bin` folder
-- Run `sudo chmod +x /usr/local/bin/sple.sh` to make it executable
+  Run`cd /usr/local/bin && wget https://raw.githubusercontent.com/lesaff/serverpilot-letsencrypt/master/sple.sh`
+- Run `sudo chmod +x sple.sh` to make it executable
 
 ## How to use
 - Run `sple.sh` anywhere from your console as root
@@ -42,5 +43,6 @@ Add the following to your crontab (`crontab -e`)
 - This script assumes that you did not change your default ServerPilot installation folder
 - When entering your domain names, please list the primary root domain name first
 - To force HTTPS on your website, please follow [instructions here](https://serverpilot.io/community/articles/how-to-force-SSL-by-redirecting-http-to-https.html)
+- To redirect www to non-www or non-www to www on your website, please follow [instructions here](https://serverpilot.io/community/articles/how-to-redirect-to-a-different-domain.html)
 - Obey/observe the rate limits. [Read the full documentation](https://letsencrypt.org/docs/rate-limits/) on the Let's Encrypt website for more information.
 

@@ -68,6 +68,25 @@ then
     fi
 fi
 
+# 18.04 
+if [ $ubuntu == '18.04' ]
+then
+
+    le=$(dpkg-query -W -f='${Status}' letsencrypt 2>/dev/null | grep -c "ok installed")
+    
+    if [ $le == 0 ]
+    then
+        echo "Let's Encrypt is not installed/found. Would you like to continue to install it?"
+        read -p "Y or N" -n 1 -r
+        echo ""
+        if [[ "$REPLY" =~ ^[Yy]$ ]]
+        then
+            sudo apt-get update
+            sudo apt-get install letsencrypt -y
+        fi 
+    fi
+fi
+
 echo ""
 echo ""
 echo "=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-=-="
@@ -118,6 +137,13 @@ fi
 
 # 16.04 Xenial Xerus
 if [ $ubuntu == '16.04' ]
+then
+    letsencrypt certonly --webroot -w /srv/users/$username/apps/$appname/public ${APPDOMAINLIST[@]}
+fi
+
+
+# 18.04
+if [ $ubuntu == '18.04' ]
 then
     letsencrypt certonly --webroot -w /srv/users/$username/apps/$appname/public ${APPDOMAINLIST[@]}
 fi
@@ -220,6 +246,12 @@ fi
 
 # 16.04 Xenial Xerus
 if [ $ubuntu == '16.04' ]
+then
+    echo "0 */12 * * * letsencrypt renew && service nginx-sp reload"
+fi
+
+# 18.04
+if [ $ubuntu == '18.04' ]
 then
     echo "0 */12 * * * letsencrypt renew && service nginx-sp reload"
 fi
